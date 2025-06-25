@@ -5,6 +5,7 @@ import com.gem_intern.manage_product.domain.dto.ProductDTO;
 import com.gem_intern.manage_product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +45,11 @@ public class ProductService {
             currentProduct = this.productRepository.save(currentProduct);
         }
         return currentProduct;
+    }
+    public List<Product> handleGetAllProduct(String keyword){
+        if (keyword == null || keyword.isEmpty()){
+            return productRepository.findAll();
+        }
+        return productRepository.findByNameContainingIgnoreCase(keyword);
     }
 }

@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api")
 public class ProductController {
@@ -56,5 +59,13 @@ public class ProductController {
             throw new IdInvalidException("id is not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.convertToProductDTO(productUpdated));
+    }
+    @GetMapping("/product")
+    @ApiMessage("get all product")
+    public ResponseEntity<List<ProductDTO>> getAllProduct(@RequestParam(value = "keyword",required = false) String keyword){
+        List<Product> products = this.productService.handleGetAllProduct(keyword);
+        List<ProductDTO> productDTOs = products.stream().map(productService::convertToProductDTO).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(productDTOs);
+
     }
 }
