@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RestResponse<T> {
     private int statusCode;
-    private String error;
-    private String message;
+    private Object error;
+    private Object message;
     private T data;
 }
