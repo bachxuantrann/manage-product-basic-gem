@@ -5,7 +5,6 @@ import com.gem_intern.manage_product.util.annotation.ApiMessage;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpResponse;
@@ -19,24 +18,25 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
     public boolean supports(MethodParameter returnType, Class converterType) {
         return true;
     }
+
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int status = servletResponse.getStatus();
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(status);
-        if(body instanceof String){
+        if (body instanceof String) {
             return body;
         }
 //      GlobalExceptionHandler will handle error, not here
-        if (status>=400){
+        if (status >= 400) {
             return body;
 //        Case error
         } else {
 //        Case success
             res.setData(body);
             ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
-            res.setMessage(message != null ? message.value(): "Call API success");
+            res.setMessage(message != null ? message.value() : "Call API success");
         }
         return res;
     }
